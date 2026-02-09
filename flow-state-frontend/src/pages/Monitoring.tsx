@@ -103,7 +103,7 @@ export const Monitoring: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50 pointer-events-none border-[12px] border-destructive/50 flex items-center justify-center bg-destructive/10 backdrop-blur-[2px]"
+            className="absolute inset-0 z-50 pointer-events-none border-12 border-destructive/50 flex items-center justify-center bg-destructive/10 backdrop-blur-[2px]"
           >
             <motion.div
               initial={{ scale: 0.8 }}
