@@ -15,6 +15,11 @@ import { Slider } from '../components/ui/Slider';
 import { useMediaStream } from '../hooks/useMediaStream';
 import { Play, Settings as SettingsIcon, Activity } from 'lucide-react';
 
+/**
+ * Dashboard Page: The entry point for starting a focus session.
+ * Allows users to set their current task, adjust sensitivity, 
+ * and preview their webcam/mic before entering "Flow State".
+ */
 export const Dashboard: React.FC = () => {
   const {
     currentTask,
@@ -25,21 +30,29 @@ export const Dashboard: React.FC = () => {
     updateSettings,
   } = useAppStore();
 
+  // Initialize the media stream hook for the preview card
   const { stream, startStream, stopStream, isActive } = useMediaStream({
     video: settings.webcamEnabled,
     audio: settings.micEnabled,
   });
 
+  /**
+   * Transitions the application from idle to monitoring state.
+   */
   const handleStartMonitoring = () => {
     if (!currentTask.trim()) return;
 
     // TODO: Later replace with IPC call to NestJS backend (main process)
+    // This will notify the AI worker to begin frame processing.
     // ipcRenderer.invoke('start-monitoring', { task: currentTask, settings })
 
     setMonitoringStatus('active');
     setPage('monitoring');
   };
 
+  /**
+   * Toggles the hardware preview on/off to save resources or privacy.
+   */
   const togglePreview = async () => {
     if (isActive) {
       stopStream();

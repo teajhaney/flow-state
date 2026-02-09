@@ -7,6 +7,10 @@ interface MicIndicatorProps {
   className?: string;
 }
 
+/**
+ * Component to display a visual progress bar indicating microphone activity.
+ * Uses the Web Audio API to analyze frequency data and calculate real-time volume levels.
+ */
 export const MicIndicator: React.FC<MicIndicatorProps> = ({
   stream,
   className,
@@ -17,11 +21,13 @@ export const MicIndicator: React.FC<MicIndicatorProps> = ({
   const animationFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
+    // If no stream is available or audio is disabled, ensure level is zeroed.
     if (!stream || stream.getAudioTracks().length === 0) {
       setLevel(0);
       return;
     }
 
+    // Initialize Web Audio API components
     const audioContext = new (
       window.AudioContext || (window as any).webkitAudioContext
     )();
@@ -29,7 +35,7 @@ export const MicIndicator: React.FC<MicIndicatorProps> = ({
     const source = audioContext.createMediaStreamSource(stream);
 
     source.connect(analyser);
-    analyser.fftSize = 256;
+    analyser.fftSize = 256; // Smaller FFT size for smoother, faster volume updates
 
     audioContextRef.current = audioContext;
     analyserRef.current = analyser;
@@ -37,15 +43,22 @@ export const MicIndicator: React.FC<MicIndicatorProps> = ({
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
 
+    /**
+     * Recursive animation loop to sample audio data and update the UI.
+     */
     const updateLevel = () => {
       if (!analyserRef.current) return;
 
       analyserRef.current.getByteFrequencyData(dataArray);
+      
+      // Calculate average volume across all frequency bins
       let sum = 0;
       for (let i = 0; i < bufferLength; i++) {
         sum += dataArray[i];
       }
       const average = sum / bufferLength;
+      
+      // Normalize value to a 0-100 percentage
       setLevel(Math.min(100, Math.round((average / 128) * 100)));
 
       animationFrameRef.current = requestAnimationFrame(updateLevel);

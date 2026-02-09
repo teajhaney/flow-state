@@ -15,6 +15,11 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
 
+/**
+ * Monitoring Page: The active "Flow State" view.
+ * Displays a live webcam feed, focus timer, and distraction alerts.
+ * In a real scenario, this would send frames to the backend for analysis.
+ */
 export const Monitoring: React.FC = () => {
   const {
     currentTask,
@@ -33,14 +38,17 @@ export const Monitoring: React.FC = () => {
     audio: settings.micEnabled,
   });
 
-  // Timer logic
+  // --- Timer & Simulation Logic ---
   useEffect(() => {
     let interval: any;
     if (monitoringStatus === 'active') {
       interval = setInterval(() => {
+        // Increment the session timer
         setSeconds(s => s + 1);
 
-        // MOCK DISTRACTION: Simulate a distraction every 30 seconds for demo
+        // MOCK DISTRACTION: 
+        // For demonstration purposes, we trigger a distraction every 30 seconds.
+        // In production, this would be triggered by an IPC message from the backend.
         if (seconds > 0 && (seconds + 1) % 30 === 0) {
           handleDistraction('Phone detected in hand!');
         }
@@ -49,12 +57,17 @@ export const Monitoring: React.FC = () => {
     return () => clearInterval(interval);
   }, [monitoringStatus, seconds]);
 
-  // Start stream on mount
+  // --- Hardware Lifecycle ---
+  // Request webcam/mic access when entering this page, 
+  // and ensure they are disabled when leaving.
   useEffect(() => {
     startStream();
     return () => stopStream();
   }, [startStream, stopStream]);
 
+  /**
+   * Triggers the visual alert overlay and logs the event to the store.
+   */
   const handleDistraction = (msg: string) => {
     setDistractionDetected(true);
     addEvent({
@@ -63,7 +76,7 @@ export const Monitoring: React.FC = () => {
       message: msg,
     });
 
-    // Auto-clear after 5 seconds
+    // Auto-clear the visual alert after 5 seconds
     setTimeout(() => setDistractionDetected(false), 5000);
   };
 
