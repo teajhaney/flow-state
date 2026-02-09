@@ -11,7 +11,7 @@
   "scripts": {
     "dev:backend": "npm run start:dev -w flow-state-backend",
     "dev:frontend": "npm run dev -w flow-state-frontend",
-    "dev:electron": "tsc -p electron/tsconfig.json && electron electron/dist/main.js",
+    "dev:electron": "npx tsc -p electron/tsconfig.json && electron electron/dist/main.js",
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:electron\"",
     "build": "npm run build -w flow-state-backend && npm run build -w flow-state-frontend",
     "test": "npm run test -w flow-state-backend"

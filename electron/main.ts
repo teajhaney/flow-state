@@ -27,15 +27,15 @@ app.on('ready', () => {
   createWindow();
 
   // Spawn NestJS Backend
-  //   const backend = spawn('npm', ['run', 'start:dev'], {
-  //     cwd: path.join(__dirname, '../../flow-state-backend'),
-  //     shell: true,
-  //     stdio: 'inherit',
-  //   });
+//   const backend = spawn('npm', ['run', 'start:dev'], {
+//     cwd: path.join(__dirname, '../../flow-state-backend'),
+//     shell: true,
+//     stdio: 'inherit',
+//   });
 
-  //   backend.on('close', code => {
-  //     console.log(`Backend process exited with code ${code}`);
-  //   });
+//   backend.on('close', code => {
+//     console.log(`Backend process exited with code ${code}`);
+//   });
 });
 
 app.on('window-all-closed', () => {
