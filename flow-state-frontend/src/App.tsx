@@ -1,14 +1,62 @@
 import { useEffect } from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { useAppStore } from './store';
+import { useAuthStore } from './store/auth';
 import { Dashboard } from './pages/Dashboard';
 import { Monitoring } from './pages/Monitoring';
 import { Settings } from './pages/Settings';
+import Splash from './pages/Splash';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
 import { cn } from './lib/utils';
 
-function App() {
-  const { currentPage, settings } = useAppStore();
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, isLoading } = useAuthStore();
 
-  // Apply theme class to body
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-zinc-950 text-white">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/splash" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+function MainApp() {
+  const { currentPage } = useAppStore();
+
+  switch (currentPage) {
+    case 'dashboard':
+      return <Dashboard />;
+    case 'monitoring':
+      return <Monitoring />;
+    case 'settings':
+      return <Settings />;
+    default:
+      return <Dashboard />;
+  }
+}
+
+function App() {
+  const { settings } = useAppStore();
+  const checkAuth = useAuthStore(state => state.checkAuth);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
   useEffect(() => {
     const root = window.document.documentElement;
     if (settings.theme === 'dark') {
@@ -19,43 +67,37 @@ function App() {
   }, [settings.theme]);
 
   // TODO: WebSocket / IPC listener for real-time events from backend
-  // useEffect(() => {
-  //   if (window.ipcRenderer) {
-  //     const removeListener = window.ipcRenderer.on('distraction-detected', (event, data) => {
-  //       useAppStore.getState().addEvent({
-  //         timestamp: Date.now(),
-  //         type: 'distraction',
-  //         message: data.message
-  //       });
-  //     });
-  //     return () => removeListener();
-  //   }
-  // }, []);
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'dashboard':
-        return <Dashboard />;
-      case 'monitoring':
-        return <Monitoring />;
-      case 'settings':
-        return <Settings />;
-      default:
-        return <Dashboard />;
-    }
-  };
 
   return (
-    <div
-      className={cn(
-        'min-h-screen transition-colors duration-300',
-        settings.theme === 'dark'
-          ? 'bg-background text-foreground'
-          : 'bg-slate-50 text-slate-900'
-      )}
-    >
-      {renderPage()}
-    </div>
+    <Router>
+      <div
+        className={cn(
+          'min-h-screen transition-colors duration-300',
+          settings.theme === 'dark'
+            ? 'bg-zinc-950 text-white'
+            : 'bg-slate-50 text-slate-900'
+        )}
+      >
+        <Toaster
+          richColors
+          position="top-center"
+          theme={settings.theme === 'dark' ? 'dark' : 'light'}
+        />
+        <Routes>
+          <Route path="/splash" element={<Splash />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <MainApp />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

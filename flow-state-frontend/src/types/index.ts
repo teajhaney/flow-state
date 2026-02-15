@@ -37,3 +37,9 @@ export interface AppState {
   addEvent: (event: MonitoringEvent) => void;
   resetEvents: () => void;
 }
+
+export interface User {
+  id: string;
+  email: string;
+  name?: string;
+}

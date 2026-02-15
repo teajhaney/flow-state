@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAppStore } from '../store';
+import { useAuthStore } from '../store/auth';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import {
@@ -196,9 +197,18 @@ export const Settings: React.FC = () => {
           </CardContent>
         </Card>
 
-        <div className="pt-8 text-center text-xs text-muted-foreground">
-          <p>Flow State v1.0.0-beta</p>
-          <p>© 2026 DeepMind Labs</p>
+        <div className="pt-8 text-center text-xs text-muted-foreground space-y-4">
+          <Button
+            variant="destructive"
+            className="w-full sm:w-auto"
+            onClick={() => useAuthStore.getState().logout()}
+          >
+            Sign Out
+          </Button>
+          <div>
+            <p>Flow State v1.0.0-beta</p>
+            <p>© 2026 SeobiLabs</p>
+          </div>
         </div>
       </div>
     </div>
