@@ -8,6 +8,7 @@ import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { toast } from 'sonner';
+import { Brain } from 'lucide-react';
 
 const signInSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -44,48 +45,61 @@ export default function SignIn() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-zinc-950 p-4">
+    <div className="flex items-center justify-center min-h-screen bg-background relative overflow-hidden">
+      {/* Background effects */}
+      <div className="absolute inset-0 bg-grid-white/[0.02] bg-size-[60px_60px]" />
+      <div className="absolute h-full w-full bg-background mask-[radial-gradient(ellipse_at_center,transparent_20%,black)] pointer-events-none" />
+
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md"
+        className="w-full max-w-sm relative z-10 px-4"
       >
-        <Card className="p-8 bg-zinc-900 border-zinc-800 shadow-2xl">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>
-            <p className="text-zinc-400">Enter your credentials to continue</p>
+        <div className="flex flex-col items-center gap-4 mb-8">
+          <div className="p-3 rounded-2xl bg-linear-to-br from-violet-600 to-indigo-600 text-white shadow-xl shadow-violet-500/20 ring-4 ring-background">
+            <Brain size={32} />
           </div>
+          <div className="text-center space-y-1">
+            <h1 className="text-2xl font-bold tracking-tight">Flow State</h1>
+            <p className="text-muted-foreground text-sm">
+              Sign in to your account
+            </p>
+          </div>
+        </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-1">
+        <Card className="p-8 border-border/50 bg-card/60 backdrop-blur-xl shadow-2xl">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Email
               </label>
               <Input
                 {...register('email')}
                 type="email"
                 placeholder="you@example.com"
-                className="w-full bg-zinc-800 border-zinc-700 text-white focus:border-indigo-500"
+                className="bg-background/50 border-input"
               />
               {errors.email && (
-                <p className="mt-1 text-xs text-red-400">
+                <p className="text-xs text-destructive">
                   {errors.email.message}
                 </p>
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-1">
-                Password
-              </label>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Password
+                </label>
+              </div>
               <Input
                 {...register('password')}
                 type="password"
                 placeholder="••••••••"
-                className="w-full bg-zinc-800 border-zinc-700 text-white focus:border-indigo-500"
+                className="bg-background/50 border-input"
               />
               {errors.password && (
-                <p className="mt-1 text-xs text-red-400">
+                <p className="text-xs text-destructive">
                   {errors.password.message}
                 </p>
               )}
@@ -94,17 +108,17 @@ export default function SignIn() {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 mt-2"
             >
               {isSubmitting ? 'Signing in...' : 'Sign In'}
             </Button>
           </form>
 
           <div className="mt-6 text-center text-sm">
-            <span className="text-zinc-500">Don't have an account? </span>
+            <span className="text-muted-foreground">Don't have an account? </span>
             <button
               onClick={() => navigate('/signup')}
-              className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
+              className="text-primary font-medium hover:underline transition-all"
             >
               Sign up
             </button>

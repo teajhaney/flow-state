@@ -8,6 +8,8 @@ import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { MonitoringModule } from './monitoring/monitoring.module';
+import { AiModule } from './ai/ai.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
@@ -31,6 +33,8 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     PrismaModule,
     UserModule,
     AuthModule,
+    MonitoringModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [

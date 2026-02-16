@@ -14,6 +14,7 @@ const defaultSettings: AppSettings = {
   maskingSound: 'none',
   sensitivity: 'medium',
   geminiApiKey: '',
+  geminiModel: 'gemini-2.0-flash',
   theme: 'dark',
 };
 
@@ -29,6 +30,7 @@ export const useAppStore = create<AppState>()(
       currentPage: 'dashboard',
       monitoringStatus: 'idle',
       currentTask: '',
+      currentSessionId: null,
       settings: defaultSettings,
       recentEvents: [],
 
@@ -42,6 +44,8 @@ export const useAppStore = create<AppState>()(
 
       setMonitoringStatus: (status: MonitoringStatus) =>
         set({ monitoringStatus: status }),
+
+      setSessionId: (id: string | null) => set({ currentSessionId: id }),
 
       // Sets the name/description of the current focus task.
 

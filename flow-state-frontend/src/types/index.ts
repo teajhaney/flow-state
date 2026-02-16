@@ -12,6 +12,7 @@ export interface AppSettings {
   maskingSound: MaskingSound;
   sensitivity: DistractionLevel;
   geminiApiKey: string;
+  geminiModel: string;
   theme: 'dark' | 'light';
 }
 
@@ -26,12 +27,14 @@ export interface AppState {
   currentPage: Page;
   monitoringStatus: MonitoringStatus;
   currentTask: string;
+  currentSessionId: string | null; // ID of the active monitoring session
   settings: AppSettings;
   recentEvents: MonitoringEvent[];
 
   // Actions
   setPage: (page: Page) => void;
   setMonitoringStatus: (status: MonitoringStatus) => void;
+  setSessionId: (id: string | null) => void;
   setCurrentTask: (task: string) => void;
   updateSettings: (settings: Partial<AppSettings>) => void;
   addEvent: (event: MonitoringEvent) => void;
@@ -42,4 +45,14 @@ export interface User {
   id: string;
   email: string;
   name?: string;
+}
+
+export interface Session {
+  id: string;
+  userId: string;
+  task: string;
+  startedAt: string;
+  endedAt?: string; // null if active
+  focusScore?: number;
+  events?: MonitoringEvent[];
 }

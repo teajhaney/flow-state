@@ -21,5 +21,26 @@ model User {
   refreshToken String?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+  sessions     Session[]
 }
 
+model Session {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  task       String
+  startedAt  DateTime @default(now())
+  endedAt    DateTime?
+  focusScore Int?
+  events     Event[]
+}
+
+model Event {
+  id         String   @id @default(cuid())
+  sessionId  String
+  session    Session  @relation(fields: [sessionId], references: [id])
+  type       String   // "distraction" | "focus"
+  message    String
+  confidence Int
+  createdAt  DateTime @default(now())
+}

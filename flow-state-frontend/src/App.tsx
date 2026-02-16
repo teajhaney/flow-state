@@ -34,19 +34,27 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+import { DashboardLayout } from './components/DashboardLayout';
+
 function MainApp() {
   const { currentPage } = useAppStore();
 
+  let content;
   switch (currentPage) {
     case 'dashboard':
-      return <Dashboard />;
+      content = <Dashboard />;
+      break;
     case 'monitoring':
-      return <Monitoring />;
+      content = <Monitoring />;
+      break;
     case 'settings':
-      return <Settings />;
+      content = <Settings />;
+      break;
     default:
-      return <Dashboard />;
+      content = <Dashboard />;
   }
+
+  return <DashboardLayout>{content}</DashboardLayout>;
 }
 
 function App() {
