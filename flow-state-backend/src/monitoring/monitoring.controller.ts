@@ -71,9 +71,15 @@ export class MonitoringController {
     @Req() req: Request,
     @Body('audio') audio: string,
     @Body('timestamp') timestamp: string,
+    @Body('sessionId') sessionId?: string,
   ) {
     const user = req.user as AuthenticatedUser;
-    return this.monitoringService.processAudio(user.userId, audio, timestamp);
+    return this.monitoringService.processAudio(
+      user.userId,
+      audio,
+      timestamp,
+      sessionId,
+    );
   }
 
   @Get('stats')
